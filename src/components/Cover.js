@@ -16,8 +16,17 @@ export function Cover(config = {}) {
   } catch { url = null; }
   if (!url) return `<section class="lecture-cover"><h1>${title}</h1><p>참여 화면을 준비하고 있습니다.</p></section>`;
   const src = escapeHtml(url.href);
+  let participationUrl = new URL(url.href);
+  if (participationUrl.hostname === 'wall.sli.do') {
+    participationUrl.hostname = 'app.sli.do';
+    participationUrl.search = '';
+  }
+  try {
+    const configured = new URL(config.slidoParticipationUrl);
+    if (configured.protocol === 'https:') participationUrl = configured;
+  } catch { /* Use the event's participant URL when no override is supplied. */ }
   return `<section class="lecture-cover" aria-labelledby="coverTitle">
-    <header class="cover-toolbar"><h1 id="coverTitle">${title}</h1><a href="${src}" target="_blank" rel="noopener noreferrer">Slido 새 창에서 보기 ↗</a></header>
+    <header class="cover-toolbar"><h1 id="coverTitle">${title}</h1><a href="${escapeHtml(participationUrl.href)}" target="_blank" rel="noopener noreferrer">slido 새 창에서 참여하기 ↗</a></header>
     <iframe class="slido-presentation" src="${src}" title="Slido 프레젠테이션 · 학생들과 함께하는 화면" allow="fullscreen" allowfullscreen></iframe>
   </section>`;
 }

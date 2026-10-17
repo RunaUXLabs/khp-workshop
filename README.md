@@ -16,7 +16,7 @@
 
 처음 접속하면 `#cover`에서 Slido 프레젠테이션이 표시됩니다. 왼쪽 상단 로고를 누르면 표지로 돌아오고, ‘수업 시작’으로 기존 첫 강의 항목을 엽니다. 기존 강의 번호와 직접 연결 주소는 유지합니다.
 
-다음 특강에서는 `src/data/lecture.json`의 **`cover.slidoUrl`**을 새 Slido Present 모드 주소로 바꾸세요. 표지 제목은 `cover.title`에서 수정합니다. 로그인·비밀번호·행사 활성 상태는 Slido에서 관리하며, 페이지 안에서 열리지 않는 환경에서는 ‘Slido 새 창에서 보기’를 사용합니다. 배포 사이트에 반영하려면 변경을 커밋하고 `main`에 push합니다.
+다음 특강에서는 `src/data/lecture.json`의 **`cover.slidoUrl`**을 출력용 Slido Present 모드 주소로, **`cover.slidoParticipationUrl`**을 학생용 참여 주소로 각각 바꾸세요. 표지 제목은 `cover.title`에서 수정합니다. 로그인·비밀번호·행사 활성 상태는 Slido에서 관리합니다. ‘slido 새 창에서 참여하기’는 학생용 참여 화면을 엽니다. 배포 사이트에 반영하려면 변경을 커밋하고 `main`에 push합니다.
 
 `wall.sli.do` 주소에 `integration=slido-admin`이 포함돼 있으면 관리자 창을 찾으려 하므로 표시 전에 이 파라미터를 제거합니다. 행사 ID와 `section`은 유지합니다.
 
