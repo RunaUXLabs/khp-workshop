@@ -69,11 +69,11 @@ GitHub Pages 배포 방식 참고: https://docs.github.com/en/pages/getting-star
 
 ## SEED 개선형과 비교
 
-첫 강의 항목에서는 최초형만 보여줍니다. 시작 카테고리의 여섯 번째 항목 `#design-comparison`과 Figma 실습 항목에서는 세 버전을 전환하며 비교합니다. 단계 전환 시 선택한 상황으로 초기화되며, 입력값은 다른 버전으로 전달하지 않습니다. 최초형의 기능·스타일은 유지했습니다.
+첫 강의 항목에서는 최초형만 보여줍니다. 시작 카테고리의 여섯 번째 항목 `#design-comparison`과 Figma 실습 항목에서는 세 버전을 전환하며 비교합니다. 단계 전환 시 선택한 상황으로 초기화되며, 입력값은 다른 버전으로 전달하지 않습니다. 서비스 기능·스타일은 유지하고, 상황 선택과 참여자 전환은 세 버전 공통으로 서비스 바깥의 ‘실습 조작’에 모았습니다. 새 창에도 같은 조작부가 표시됩니다.
 
 - 공식 패키지: `@seed-design/css@3.0.2`, pnpm-lock.yaml로 고정
 - CSS 일부 적용형: 최초형의 네이티브 UI·동작을 유지하고 공개 SEED CSS 토큰을 일부 적용한 학습용 중간 예시입니다.
-- 공식 컴포넌트 개선형: `@seed-design/react@3.0.0`, 공식 CLI의 ActionButton·TextField·RadioSelectBox·Badge·Callout 및 Box·VStack·HStack·Text를 사용합니다.
+- 공식 컴포넌트 개선형: `@seed-design/react@3.0.0`, 공식 CLI의 ActionButton·TextField·RadioSelectBox·Badge·Callout·List·ListHeader·ResultSection 및 Divider·Icon·Box·VStack·HStack·Text를 사용합니다.
 - 흐름: 시작 → 날짜 → 예산 → 필수 조건 → 공유 범위 → 내 조건 확인 → 후보 선택 → 참여자별 동의 → 확정 완료. 이전 이동 시 입력을 유지합니다.
 - 교안·최초형은 바닐라 ES 모듈이며 개선형만 React/esbuild로 별도 빌드합니다. CSS·JS·콘텐츠는 별도 파일로 배포합니다.
 - 도메인 모델: `src/demo/model.js`를 두 버전이 공유합니다.

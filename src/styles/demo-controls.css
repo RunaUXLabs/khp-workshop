@@ -1,0 +1,12 @@
+.demo-controls { box-sizing:border-box; margin:16px auto; padding:16px; width:100%; border:1px solid #d4ddea; border-radius:10px; background:#f3f5f9; font-family:inherit; color:#24324c; }
+body > .demo-controls { max-width:480px; }
+.demo-controls-heading { display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; }
+.demo-controls-heading strong { font-size:16px; }
+.demo-controls-heading span,.demo-controls p { font-size:14px; line-height:1.6; color:#526078; }
+.demo-controls-scenes { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+.demo-controls-scenes button { font:inherit; font-size:14px; padding:8px 10px; border:1px solid #c8d1df; border-radius:6px; color:#24324c; background:white; cursor:pointer; }
+.demo-controls-scenes button[aria-pressed="true"] { background:#24324c; color:white; }
+.demo-controls-actor { display:flex; gap:12px; align-items:center; font-size:14px; font-weight:600; }
+.demo-controls-actor select { font:inherit; padding:8px 12px; min-height:40px; border:1px solid #c8d1df; border-radius:6px; background:white; color:#24324c; }
+.demo-controls p { margin:12px 0 0; }
+.demo-controls :is(button,select):focus-visible { outline:2px solid #305dff; outline-offset:2px; }

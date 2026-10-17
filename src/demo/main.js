@@ -1,11 +1,17 @@
+import { mountStandaloneDemoControls, publishDemoActor } from '../components/DemoControls.js';
 import { people, initialState, evaluate, applyPreset } from './model.js';
 import { ConditionScreen } from './ConditionScreen.js';
 import { ComparisonScreen } from './ComparisonScreen.js';
 import { escapeHtml as e } from './ui.js';
 let state=initialState();
+const params=new URLSearchParams(location.search);
+if(['pending','conflict','ready','changed'].includes(params.get('scene')))applyPreset(state,params.get('scene'));
+if(people.includes(params.get('actor')))state.actor=params.get('actor');
+mountStandaloneDemoControls();
 const root=document.getElementById('travel-app');
 function render(){
- root.innerHTML=`<div class="demo"><header class="travel-header"><a class="wordmark" href="#" aria-label="같이 가는 여행 처음으로">같이<span>가는 여행</span><i>↗</i></a><span class="edition">수업용 데모</span></header><div class="trip-meta"><span>친구들과 가을 여행</span><span>4명 · 조건 v${state.version}</span></div><nav class="tabs" aria-label="서비스 화면"><button data-tab="conditions" class="${state.tab==='conditions'?'active':''}" aria-pressed="${state.tab==='conditions'}">내 조건 확인</button><button data-tab="compare" class="${state.tab==='compare'?'active':''}" aria-pressed="${state.tab==='compare'}">함께 후보 비교</button></nav><div class="actor"><label>참여자 시점 <select id="actor">${people.map(name=>`<option ${name===state.actor?'selected':''}>${name}</option>`).join('')}</select></label><span>각자의 확인과 동의를 체험해요.</span></div>${state.notice?`<p class="notice" role="status">${e(state.notice)}</p>`:''}${state.tab==='conditions'?ConditionScreen(state):ComparisonScreen(state)}<footer class="scenario"><strong>확인할 상황</strong><div>${[['pending','미응답'],['conflict','충돌'],['ready','전원 동의'],['changed','조건 변경']].map(([id,label])=>`<button data-preset="${id}">${label}</button>`).join('')}<button data-action="reset">처음부터</button></div><p>합성자료 S01~S05로 만든 UI 시제품 · 실제 AI·예약·외부 공유 미연결</p></footer></div>`;
+ root.innerHTML=`<div class="demo"><header class="travel-header"><a class="wordmark" href="#" aria-label="같이 가는 여행 처음으로">같이<span>가는 여행</span><i>↗</i></a><span class="edition">수업용 데모</span></header><div class="trip-meta"><span>친구들과 가을 여행</span><span>4명 · 조건 v${state.version}</span></div><nav class="tabs" aria-label="서비스 화면"><button data-tab="conditions" class="${state.tab==='conditions'?'active':''}" aria-pressed="${state.tab==='conditions'}">내 조건 확인</button><button data-tab="compare" class="${state.tab==='compare'?'active':''}" aria-pressed="${state.tab==='compare'}">함께 후보 비교</button></nav><div class="actor"><span>현재 시점 · ${e(state.actor)}</span></div>${state.notice?`<p class="notice" role="status">${e(state.notice)}</p>`:''}${state.tab==='conditions'?ConditionScreen(state):ComparisonScreen(state)}<footer class="scenario"><p>수업용 예시 데이터 · 실제 AI·예약·외부 공유 미연결</p></footer></div>`;
+ publishDemoActor(state.actor);
 }
 root.addEventListener('change',event=>{if(event.target.id==='actor'){state.actor=event.target.value;render();}});
 root.addEventListener('submit',event=>{
@@ -35,5 +41,12 @@ root.addEventListener('click',event=>{
  if(action==='finalize'&&state.actor==='지수'&&evaluate(state).ready&&!state.members.some(p=>p.visibility==='나만 보기'))state.finalized=true;
  render();
 });
-window.addEventListener('message',event=>{if(event.origin!==location.origin||event.data?.type!=='travel-comparison')return;const scene=event.data.scene;if(scene==='conditions'){state=initialState();}else if(['pending','conflict','ready','changed'].includes(scene)){applyPreset(state,scene);if(scene==='ready')state.actor='지수';}else return;render();});
+window.addEventListener('message',event=>{
+ if(event.origin!==location.origin||event.source!==(window.parent===window?window:window.parent))return;
+ if(event.data?.type==='travel-actor'&&people.includes(event.data.actor)){state.actor=event.data.actor;render();return;}
+ if(event.data?.type!=='travel-comparison')return;
+ const scene=event.data.scene;if(!['conditions','pending','conflict','ready','changed'].includes(scene))return;
+ state=initialState();if(scene!=='conditions')applyPreset(state,scene);
+ if(people.includes(event.data.actor))state.actor=event.data.actor;else if(scene==='ready')state.actor='지수';render();
+});
 render();

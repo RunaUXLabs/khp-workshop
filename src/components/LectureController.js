@@ -54,6 +54,7 @@ export function mountLecture(D, DOCS) {
       const nextLabel = document.getElementById('nextLabel');
       let cur = -1;
       let cleanupPreviews = () => {};
+      let cleanupComparisons = () => {};
 
       const detailFab = document.getElementById('detailFab');
       const docPanel = document.getElementById('docPanel');
@@ -113,6 +114,7 @@ export function mountLecture(D, DOCS) {
       function escapeHtml(t) { return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
       function goCover() {
         cleanupPreviews();
+        cleanupComparisons();
         cur = -1;
         closeDoc();
         mainEl.classList.add('is-cover');
@@ -134,12 +136,13 @@ export function mountLecture(D, DOCS) {
         if (i < 0 || i >= secs.length) return;
         cur = i; const s = secs[i];
         cleanupPreviews();
+        cleanupComparisons();
         mainEl.classList.remove('is-cover');
         prevBtn.hidden = false;
         document.getElementById('brandTitle').removeAttribute('aria-current');
         crumbEl.textContent = s.part;
         contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
-        mountDemoComparisons(contentEl);
+        cleanupComparisons = mountDemoComparisons(contentEl);
         cleanupPreviews = mountPreviewPanels(contentEl);
         enhanceResourceActions(contentEl);
         Object.values(linkMap).forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
