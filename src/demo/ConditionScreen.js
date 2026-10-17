@@ -1,0 +1,7 @@
+import { escapeHtml as e, badge } from './ui.js';
+export function ConditionScreen(state) {
+ const member = state.members.find(person => person.name === state.actor);
+ return `<section class="screen" aria-labelledby="condition-title"><div class="eyebrow">01 / 내 조건 확인</div><h2 id="condition-title">내 조건부터,<br>정확하게 확인해요.</h2><p class="muted">AI가 정리한 초안이에요. 원문과 비교하고 직접 확인해 주세요.</p>
+ <div class="source"><div class="source-head">${badge('AI 추출 초안')} <button class="text-button" data-action="fill">예시 초안 채우기</button></div><p>${e(member.name)}: “${e(member.date)}이 좋아요. 예산은 ${member.budget}만원 이내로 생각해요.”</p><small>수업용 공개 가능 예시 문장 · 비공개 사유는 수집하지 않아요.</small></div>
+ <form id="condition-form"><label>가능한 일정<select name="date"><option ${member.date==='토요일 출발'?'selected':''}>토요일 출발</option><option ${member.date==='금·토 모두 가능'?'selected':''}>금·토 모두 가능</option></select></label><label>1인 예산 상한 <span>만원</span><input name="budget" type="number" min="1" max="999" required value="${member.budget}"></label><label>꼭 지키고 싶은 조건<input name="requirement" maxlength="90" value="${e(member.requirement)}" required></label><label>조건 공개 범위<select name="visibility"><option ${member.visibility==='공유'?'selected':''}>공유</option><option ${member.visibility==='나만 보기'?'selected':''}>나만 보기</option></select></label><p class="privacy">비공개 사유는 적지 않아도 괜찮아요. 나만 보기 조건은 공유 비교에서 확인 필요로 표시해요.</p><button class="primary wide" type="submit">내 조건 확인${member.confirmed?' · 수정 저장':''}</button></form><button class="text-button wide" data-action="compare">후보 비교 먼저 보기 →</button></section>`;
+}

@@ -1,0 +1,14 @@
+/* Intermediate example: public SEED tokens only; original native UI and flow. */
+:root {
+  --ink: var(--seed-color-fg-neutral);
+  --muted: var(--seed-color-fg-neutral-subtle);
+  --line: var(--seed-color-stroke-neutral-muted);
+}
+body { background: var(--seed-color-bg-layer-default); }
+.primary { background: var(--seed-color-bg-brand-solid); color: var(--seed-color-fg-on-brand-solid); border-color: var(--seed-color-bg-brand-solid); border-radius: var(--seed-radius-r3); }
+.secondary, .tabs button.active { background: var(--seed-color-bg-neutral-weak); color: var(--seed-color-fg-neutral); border-color: var(--seed-color-stroke-neutral-muted); }
+.source { background: var(--seed-color-bg-informative-weak); }
+.candidate.selected { border-color: var(--seed-color-stroke-brand-solid); background: var(--seed-color-bg-brand-weak); }
+.decision { background: var(--seed-color-bg-warning-weak); }
+.decision.confirmed { background: var(--seed-color-bg-positive-weak); }
+button:disabled { background: var(--seed-color-bg-disabled); color: var(--seed-color-fg-disabled); border-color: var(--seed-color-stroke-neutral-muted); }
