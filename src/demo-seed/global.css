@@ -1,0 +1,5 @@
+/* Only document setup. All product UI uses SEED React components and public props. */
+html, body { margin: 0; min-height: 100%; }
+body { font-family: 'Noto Sans KR', system-ui, sans-serif; background: var(--seed-color-bg-layer-default); }
+* { box-sizing: border-box; }
+h1[tabindex="-1"]:focus { outline: none; }

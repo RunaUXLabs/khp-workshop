@@ -1,0 +1,21 @@
+{
+  "color/fg/neutral": "#1a1c20",
+  "color/fg/neutral-subtle": "#868b94",
+  "color/fg/neutral-muted": "#555d6d",
+  "color/fg/on-brand-solid": "#ffffff",
+  "color/fg/disabled": "#d1d3d8",
+  "color/fg/informative-contrast": "#0b4596",
+  "color/fg/positive-contrast": "#075445",
+  "color/fg/critical-contrast": "#921708",
+  "color/bg/layer-default": "#ffffff",
+  "color/bg/neutral-muted": "#f7f8f9",
+  "color/bg/neutral-weak": "#f3f4f5",
+  "color/bg/brand-solid": "#ff6600",
+  "color/bg/brand-weak": "#fff2ec",
+  "color/bg/disabled": "#f3f4f5",
+  "color/bg/informative-weak": "#eff6ff",
+  "color/bg/positive-weak": "#edfaf6",
+  "color/bg/critical-weak": "#fdf0f0",
+  "color/stroke/neutral-muted": "#00000010",
+  "color/stroke/brand-solid": "#e14d00"
+}
