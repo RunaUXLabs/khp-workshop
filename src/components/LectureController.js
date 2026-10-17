@@ -1,0 +1,158 @@
+import { marked } from '../lib/markdown.js';
+import { mountDemoComparisons } from './DemoComparison.js';
+export function mountLecture(D, DOCS) {
+      const secs = D.sections;
+      document.title = D.title;
+      document.getElementById('brandTitle').textContent = D.title;
+      document.getElementById('brandSub').textContent = D.subtitle;
+      marked.use({ extensions: [{
+        name: 'lectureStrong',
+        level: 'inline',
+        start(src) { return src.indexOf('**'); },
+        tokenizer(src) {
+          const match = /^\*\*([^\n]+?)\*\*/.exec(src);
+          if (match) return { type: 'lectureStrong', raw: match[0], tokens: this.lexer.inlineTokens(match[1]) };
+        },
+        renderer(token) { return '<strong>' + this.parser.parseInline(token.tokens) + '</strong>'; }
+      }] });
+      marked.setOptions({ breaks: true, gfm: true });
+
+      const toc = document.getElementById('toc');
+      const linkMap = {};
+      let lastPart = null, curGroup = null;
+      secs.forEach((s, i) => {
+        if (s.part !== lastPart) {
+          const lbl = document.createElement('div'); lbl.className = 'toc-group';
+          const span = document.createElement('div'); span.className = 'toc-group-label';
+          span.textContent = s.part; lbl.appendChild(span); toc.appendChild(lbl);
+          curGroup = lbl; lastPart = s.part;
+        }
+        const a = document.createElement('a');
+        a.textContent = s.tocTitle || s.title; a.dataset.idx = i; a.href = '#' + s.id;
+        if (s.detailDoc && DOCS[s.detailDoc]) a.classList.add('has-doc');
+        a.dataset.search = ((s.tocTitle || s.title) + ' ' + s.title + ' ' + s.part + ' ' + s.body).toLowerCase();
+        a.addEventListener('click', event => { event.preventDefault(); go(i); closeMobile(); });
+        curGroup.appendChild(a); linkMap[i] = a;
+      });
+
+      const contentEl = document.getElementById('content');
+      const crumbEl = document.getElementById('crumb');
+      const mainEl = document.getElementById('main');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const prevLabel = document.getElementById('prevLabel');
+      const nextLabel = document.getElementById('nextLabel');
+      let cur = 0;
+
+      const detailFab = document.getElementById('detailFab');
+      const docPanel = document.getElementById('docPanel');
+      const docBackdrop = document.getElementById('docBackdrop');
+      const docTitleEl = document.getElementById('docTitle');
+      const docBodyEl = document.getElementById('docBody');
+      let curDocKey = null, docRendered = null;
+      let docRequest = 0;
+
+      async function openDoc(key) {
+        const doc = DOCS[key]; if (!doc) return;
+        const request = ++docRequest;
+        docTitleEl.textContent = doc.title || '심화 가이드';
+        docPanel.querySelector('.label').textContent = doc.kind === 'conversation' ? '대화 샘플 · 재구성 예시' : doc.kind === 'background' ? '페르소나 · 합성 배경 자료' : '심화 가이드';
+        docBodyEl.scrollTop = 0;
+        docPanel.classList.add('open'); docBackdrop.classList.add('open');
+        if (docRendered === key) return;
+        docRendered = null;
+        docBodyEl.textContent = '자료를 불러오는 중입니다…';
+        try {
+          let body = doc.body;
+          if (doc.source) {
+            const response = await fetch(new URL('../../' + doc.source, import.meta.url), { cache: 'no-store' });
+            if (!response.ok) throw new Error('자료를 불러오지 못했습니다.');
+            body = await response.text();
+          }
+          if (request !== docRequest) return;
+          docBodyEl.innerHTML = marked.parse(body);
+          for (const table of docBodyEl.querySelectorAll('table')) {
+            const scroll = document.createElement('div');
+            scroll.className = 'guide-table-scroll';
+            scroll.tabIndex = 0;
+            scroll.setAttribute('role', 'region');
+            scroll.setAttribute('aria-label', '비교표 · 필요한 경우 가로로 스크롤');
+            table.before(scroll);
+            scroll.appendChild(table);
+          }
+          docRendered = key;
+          docBodyEl.scrollTop = 0;
+        } catch (error) {
+          if (request === docRequest) docBodyEl.textContent = `${error.message} 잠시 후 다시 열어주세요.`;
+        }
+      }
+      function closeDoc() { docRequest++; docPanel.classList.remove('open'); docBackdrop.classList.remove('open'); }
+      function openLinkedGuide(event) {
+        const button = event.target.closest('button[data-guide]');
+        if (button) openDoc(button.dataset.guide);
+      }
+      contentEl.addEventListener('click', openLinkedGuide);
+      docBodyEl.addEventListener('click', openLinkedGuide);
+      detailFab.addEventListener('click', () => { if (curDocKey) openDoc(curDocKey); });
+      document.getElementById('docClose').addEventListener('click', closeDoc);
+      docBackdrop.addEventListener('click', closeDoc);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDoc(); });
+
+      function escapeHtml(t) { return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+      function go(i) {
+        if (i < 0 || i >= secs.length) return;
+        cur = i; const s = secs[i];
+        crumbEl.textContent = s.part;
+        contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
+        mountDemoComparisons(contentEl);
+        Object.values(linkMap).forEach(a => a.classList.remove('active'));
+        linkMap[i].classList.add('active');
+        prevBtn.disabled = (i === 0); nextBtn.disabled = (i === secs.length - 1);
+        prevLabel.textContent = i > 0 ? secs[i - 1].title : '';
+        nextLabel.textContent = i < secs.length - 1 ? secs[i + 1].title : '';
+        mainEl.scrollTop = 0;
+        curDocKey = (s.detailDoc && DOCS[s.detailDoc]) ? s.detailDoc : null;
+        detailFab.classList.toggle('show', !!curDocKey);
+        closeDoc();
+        try { if (history.replaceState) history.replaceState(null, '', '#' + s.id); } catch (_) { }
+      }
+      prevBtn.addEventListener('click', () => go(cur - 1));
+      nextBtn.addEventListener('click', () => go(cur + 1));
+      document.addEventListener('keydown', e => {
+        if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(e.target.tagName)) return;
+        if (docPanel.classList.contains('open')) return;
+        if (e.key === 'ArrowLeft') go(cur - 1);
+        if (e.key === 'ArrowRight') go(cur + 1);
+      });
+
+      const search = document.getElementById('search');
+      search.addEventListener('input', () => {
+        const q = search.value.trim().toLowerCase();
+        secs.forEach((s, i) => {
+          const match = !q || linkMap[i].dataset.search.includes(q);
+          linkMap[i].classList.toggle('hidden', !match);
+        });
+        document.querySelectorAll('.toc-group').forEach(g => {
+          const links = g.querySelectorAll('a');
+          const visible = Array.from(links).some(a => !a.classList.contains('hidden'));
+          g.classList.toggle('hidden', links.length > 0 && !visible);
+        });
+      });
+
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('backdrop');
+      function closeMobile() { sidebar.classList.remove('open'); backdrop.classList.remove('show'); }
+      document.getElementById('menuToggle').addEventListener('click', () => {
+        sidebar.classList.toggle('open'); backdrop.classList.toggle('show');
+      });
+      backdrop.addEventListener('click', closeMobile);
+
+      window.addEventListener('hashchange', () => {
+        const targetId = decodeURIComponent(location.hash.slice(1));
+        const targetIndex = secs.findIndex(s => s.id === targetId);
+        if (targetIndex >= 0) { go(targetIndex); closeMobile(); }
+      });
+      const hash = decodeURIComponent(location.hash.replace('#', ''));
+      const startIdx = secs.findIndex(s => s.id === hash);
+      go(startIdx < 0 ? 0 : startIdx);
+    }
