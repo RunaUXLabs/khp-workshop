@@ -1,0 +1,88 @@
+flowchart LR
+    participants(["주체 | 참여자: 지수·민호·서연·도윤"])
+    organizer(["주체 | 준비자 지수"])
+
+    inputData[/"입력 | 여행 대화·날짜·예산·필수 조건·공개 범위: 불필요한 비공개 사유는 수집 제외"/]
+    privacyProcess("시스템 처리 | AI 전달 전 공개 범위 검사·필요한 공개 가능 텍스트만 선별")
+    ownSourceStore[("저장소 설계안 | 본인 접근용 원본 입력·공개 범위: 비공개 사유 제외")]
+    safeSourceStore[("저장소 설계안 | 공유 가능 원문 부분: 비공개 사유 제외")]
+    aiProcess("AI 처리 | 조건 추출·정리: 동의·확정 쓰기 권한 없음")
+    draftData[/"추출 초안 | 값·허용된 원문 참조·확인 필요 상태"/]
+    errorProcess("시스템 처리 | 비공개 내용·입력 원문을 제외한 오류 안내 생성")
+    myUi["본인 전용 UI | 내 조건 확인: 원문 대조·수정·공개 범위 선택·본인 확인"]
+
+    conditionProcess("시스템 처리 | 본인 수정·확인 검증 및 조건 저장")
+    conditionStore[("저장소 설계안 | 조건·공개 범위·조건 버전·본인 확인 상태")]
+    shareProcess("시스템 처리 | 공유 허용된 확인 조건·공유 가능 원문 참조만 선별")
+    compareProcess("시스템 처리 | 후보별 조건 충족·충돌·미확인 비교")
+    compareUi["공유 UI | 함께 후보 비교: 허용된 조건·원문 미리보기·비교 결과·응답·동의·확정 상태"]
+
+    responseProcess("시스템 처리 | 참여자별 응답 상태 기록")
+    responseStore[("저장소 설계안 | 참여자별 응답 상태: 미응답·응답 완료")]
+    consentProcess("시스템 처리 | 개인의 명시적 동의 기록")
+    consentStore[("저장소 설계안 | 후보·참여자·조건 버전별 동의: 미동의·동의·재확인 필요")]
+
+    finalCheck{"시스템 판단 | 최신 조건에 충돌·미확인이 없고 선택 후보에 전원의 명시적 동의가 유효한가?"}
+    finalStore[("저장소 설계안 | 확정 상태·선택 후보·확정 조건 버전")]
+    blockProcess("시스템 처리 | 비공개 내용 없는 확정 차단 이유 생성")
+
+    changeProcess("시스템 처리 | 조건 수정 접수·변경 이력 기록")
+    historyStore[("저장소 설계안 | 조건 변경 이력: 변경 항목·버전·영향 범위")]
+    impactProcess("시스템 처리 | 영향받는 확인·동의를 재확인 필요로 변경·기존 확정 해제")
+
+    participants -->|"공개 범위를 선택한 입력: 비공개 사유 제외"| inputData
+    inputData -->|"입력값·공개 범위"| privacyProcess
+    privacyProcess -->|"본인 접근용 원본·공개 범위"| ownSourceStore
+    privacyProcess -->|"공유 가능한 원문 부분"| safeSourceStore
+    privacyProcess -->|"필요한 공개 가능 텍스트만"| aiProcess
+    aiProcess -->|"추출한 값·원문 참조·확인 필요 상태"| draftData
+    draftData -->|"AI 초안"| myUi
+    ownSourceStore -->|"본인에게만 허용된 원문"| myUi
+    aiProcess -->|"원문을 포함하지 않는 실패 코드"| errorProcess
+    errorProcess -->|"실패 이유·재시도·직접 입력 안내"| myUi
+
+    participants -->|"직접 입력·수정·공개 범위·본인 확인"| myUi
+    myUi -->|"수정값·공개 범위·본인 확인 결과"| conditionProcess
+    conditionProcess -->|"조건값·조건 버전·확인 상태"| conditionStore
+    conditionStore -->|"조건·공개 범위·확인 상태"| shareProcess
+    safeSourceStore -->|"공유 가능한 원문 참조"| shareProcess
+    shareProcess -->|"공유 허용된 확인 조건"| compareProcess
+    shareProcess -->|"공유 허용된 조건·원문 미리보기"| compareUi
+    compareProcess -->|"후보별 충족·충돌·미확인 결과"| compareUi
+
+    participants -->|"본인의 응답 상태"| responseProcess
+    responseProcess -->|"참여자별 미응답·응답 완료"| responseStore
+    responseStore -->|"참여자별 응답 상태"| compareUi
+    participants -->|"선택 후보에 대한 개인의 명시적 동의"| compareUi
+    compareUi -->|"후보·참여자·조건 버전·동의 선택"| consentProcess
+    consentProcess -->|"개인 동의 기록"| consentStore
+    consentStore -->|"미동의·명시적 동의·재확인 필요 상태"| compareUi
+
+    organizer -->|"선택 후보·최종 확정 요청"| finalCheck
+    conditionStore -->|"최신 조건·조건 버전·확인 상태"| finalCheck
+    compareProcess -->|"선택 후보의 최신 충돌·미확인 결과"| finalCheck
+    consentStore -->|"선택 후보의 전원 동의·대상 조건 버전"| finalCheck
+    finalCheck -->|"예: 확정 상태·선택 후보·조건 버전"| finalStore
+    finalStore -->|"최종 확정 또는 재확인 필요 상태"| compareUi
+    finalCheck -->|"아니오: 차단 사유 코드"| blockProcess
+    blockProcess -->|"비공개 내용 없는 차단 이유"| compareUi
+
+    myUi -->|"확정 전후의 조건 수정값·공개 범위"| changeProcess
+    changeProcess -->|"변경 항목·버전·영향 범위"| historyStore
+    historyStore -->|"최신 변경 내역·영향 범위"| impactProcess
+    impactProcess -->|"수정 조건·새 버전·영향받는 본인 확인의 재확인 필요 상태"| conditionStore
+    impactProcess -->|"영향받는 기존 동의의 재확인 필요 상태"| consentStore
+    impactProcess -->|"기존 확정 해제·재확인 필요 상태"| finalStore
+    impactProcess -->|"영향받는 조건·확인 및 동의 재확인 안내"| myUi
+    impactProcess -->|"공유 허용된 변경 요약·확정 차단 상태"| compareUi
+
+    classDef actor fill:#FAFAFA,stroke:#525252,color:#262626;
+    classDef input fill:#FFF7ED,stroke:#EA580C,color:#7C2D12;
+    classDef process fill:#F0FDF4,stroke:#16A34A,color:#14532D;
+    classDef store fill:#FAF5FF,stroke:#9333EA,color:#581C87;
+    classDef ui fill:#EFF6FF,stroke:#2563EB,color:#172554;
+    class participants,organizer actor;
+    class inputData,draftData input;
+    class privacyProcess,aiProcess,errorProcess,conditionProcess,shareProcess,compareProcess,responseProcess,consentProcess,finalCheck,blockProcess,changeProcess,impactProcess process;
+    class ownSourceStore,safeSourceStore,conditionStore,responseStore,consentStore,finalStore,historyStore store;
+    class myUi,compareUi ui;

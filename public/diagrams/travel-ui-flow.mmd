@@ -1,0 +1,83 @@
+flowchart TD
+    startNode(["시작"])
+    inputScreen["입력 화면 | 참여자: 여행 대화·조건 입력"]
+    extractProcess("처리 | AI: 조건 추출 초안 작성")
+    extractSuccess{"판단 | 시스템: 추출에 성공했는가?"}
+    failureScreen["안내 화면 | 시스템: 비공개 내용 없이 실패 이유·재시도·직접 입력 안내"]
+    retryDecision{"판단 | 참여자: 재시도하는가?"}
+    manualInput["입력 화면 | 참여자: 조건 직접 입력"]
+
+    myScreen["내 조건 확인 | 본인 전용 화면: 원문과 조건 후보 대조"]
+    editConditions["내 조건 확인 | 참여자: 날짜·예산·필수 조건·공개 범위 수정"]
+    selfCheck["내 조건 확인 | 참여자: 본인 확인 실행"]
+    missingDecision{"판단 | 시스템: 누락 또는 확인 필요 항목이 있는가?"}
+
+    compareProcess("처리 | 시스템: 공유 허용된 본인 확인 조건으로 후보 비교")
+    compareScreen["함께 후보 비교 | 후보별 충족·충돌·미확인 및 사람별 응답 상태 표시"]
+    privacyNote["공유 표시 원칙 | 서연의 예산 30만원 이내는 공유 가능·비공개 사유는 표시 제외"]
+    blockedDecision{"판단 | 시스템: 조건 충돌 또는 미확인이 있는가?"}
+    blockedScreen["함께 후보 비교 | 확정 차단 이유 표시: 미응답은 동의가 아님"]
+    adjustDecision{"판단 | 참여자: 조건을 조정하는가?"}
+    requestAction["함께 후보 비교 | 참여자: 응답 요청 선택"]
+    waitingScreen["함께 후보 비교 | 대기 상태: 미응답·미동의 구분"]
+    responseAction["내 조건 확인 또는 함께 후보 비교 | 해당 참여자: 조건 확인·응답"]
+
+    changeProcess("처리 | 시스템: 조건 변경 이력 기록·영향받는 확인과 기존 동의를 재확인 필요로 변경·기존 확정 해제")
+    recheckScreen["내 조건 확인 | 영향받는 참여자: 변경 조건·기존 동의 영향 확인"]
+
+    agreeAction["함께 후보 비교 | 각 참여자: 선택 후보에 이 후보에 동의 선택"]
+    allAgreeDecision{"판단 | 시스템: 최신 조건의 선택 후보에 전원이 명시적으로 동의했는가?"}
+    finalizeAction["함께 후보 비교 | 준비자 지수: 최종 확정 실행"]
+    finalCheck{"판단 | 시스템: 최신 조건에 충돌·미확인이 없고 전원의 동의가 유효한가?"}
+    confirmedScreen["함께 후보 비교 | 시스템: 최종 확정 상태 표시"]
+    postChangeDecision{"판단 | 참여자: 확정 이후 조건을 변경하는가?"}
+    finishNode(["확정 유지"])
+
+    startNode --> inputScreen
+    inputScreen --> extractProcess
+    extractProcess --> extractSuccess
+    extractSuccess -->|"예"| myScreen
+    extractSuccess -->|"아니오"| failureScreen
+    failureScreen --> retryDecision
+    retryDecision -->|"예"| extractProcess
+    retryDecision -->|"아니오"| manualInput
+    manualInput --> myScreen
+
+    myScreen --> editConditions
+    editConditions --> selfCheck
+    selfCheck --> missingDecision
+    missingDecision -->|"예"| editConditions
+    missingDecision -->|"아니오"| compareProcess
+    compareProcess --> compareScreen
+    privacyNote -.-> compareScreen
+    compareScreen --> blockedDecision
+    blockedDecision -->|"예"| blockedScreen
+    blockedScreen --> adjustDecision
+    adjustDecision -->|"예"| changeProcess
+    adjustDecision -->|"아니오"| requestAction
+    requestAction --> waitingScreen
+    waitingScreen --> responseAction
+    responseAction --> compareProcess
+
+    changeProcess --> recheckScreen
+    recheckScreen --> myScreen
+
+    blockedDecision -->|"아니오"| agreeAction
+    agreeAction --> allAgreeDecision
+    allAgreeDecision -->|"아니오"| waitingScreen
+    allAgreeDecision -->|"예"| finalizeAction
+    finalizeAction --> finalCheck
+    finalCheck -->|"아니오"| compareProcess
+    finalCheck -->|"예"| confirmedScreen
+    confirmedScreen --> postChangeDecision
+    postChangeDecision -->|"예"| changeProcess
+    postChangeDecision -->|"아니오"| finishNode
+
+    classDef screen fill:#EFF6FF,stroke:#2563EB,color:#172554;
+    classDef process fill:#F0FDF4,stroke:#16A34A,color:#14532D;
+    classDef decision fill:#FFF7ED,stroke:#EA580C,color:#7C2D12;
+    classDef note fill:#FAFAFA,stroke:#737373,color:#262626;
+    class inputScreen,failureScreen,manualInput,myScreen,editConditions,selfCheck,compareScreen,blockedScreen,requestAction,waitingScreen,responseAction,recheckScreen,agreeAction,finalizeAction,confirmedScreen screen;
+    class extractProcess,compareProcess,changeProcess process;
+    class extractSuccess,retryDecision,missingDecision,blockedDecision,adjustDecision,allAgreeDecision,finalCheck,postChangeDecision decision;
+    class privacyNote note;
