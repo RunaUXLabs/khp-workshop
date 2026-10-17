@@ -1,0 +1,17 @@
+import { cp, mkdir, copyFile, rm } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import { build } from 'esbuild';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const dist=path.join(root,'dist');
+if(path.dirname(dist)!==path.resolve(root))throw new Error('Build output must stay inside the project');
+await rm(dist,{recursive:true,force:true});
+await mkdir(dist,{recursive:true});
+await cp(path.join(root,'public'),dist,{recursive:true});
+await cp(path.join(root,'src'),path.join(dist,'src'),{recursive:true});
+await copyFile(path.join(root,'index.html'),path.join(dist,'index.html'));
+await build({entryPoints:[path.join(root,'src/demo-seed/entry.jsx')],bundle:true,outfile:path.join(dist,'demo-seed/app.js'),format:'esm',minify:true,jsx:'automatic',define:{'process.env.NODE_ENV':'"production"'},legalComments:'linked'});
+const seedPackage=path.join(root,'node_modules/@seed-design/css');
+await mkdir(path.join(dist,'vendor/seed'),{recursive:true});
+for(const file of ['all.css','LICENSE','NOTICE'])await copyFile(path.join(seedPackage,file),path.join(dist,'vendor/seed',file));
+console.log('Built dist/ — static modules, components, content and local assets.');
