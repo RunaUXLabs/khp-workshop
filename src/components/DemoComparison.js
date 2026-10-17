@@ -7,7 +7,7 @@ const stages = [
 export function mountDemoComparisons(container) {
   for (const host of container.querySelectorAll('[data-demo-comparison]')) {
     let currentScene = 'conditions';
-    host.innerHTML = `<div class="design-stages" role="group" aria-label="디자인 발전 단계 선택">${stages.map(stage => `<button type="button" data-design-stage="${stage.id}" aria-pressed="false">${stage.label}</button>`).join('')}</div><section class="design-stage"><h3 data-stage-title></h3><p data-stage-description></p><div class="comparison-controls" role="group" aria-label="확인할 상황"><strong>확인할 상황</strong>${[['conditions','내 조건'],['pending','미응답'],['conflict','충돌'],['ready','전원 동의'],['changed','조건 변경']].map(([id,label]) => `<button type="button" data-scene="${id}" aria-pressed="${id==='conditions'}">${label}</button>`).join('')}</div><iframe class="stage-preview" loading="lazy"></iframe><p><a data-stage-open target="_blank" rel="noopener">선택한 버전 크게 보기 ↗</a></p><p class="stage-hint">버전을 전환하면 선택한 상황의 초기 상태로 시작합니다. 직접 입력한 값은 다른 버전으로 전달되지 않습니다.</p></section>`;
+    host.innerHTML = `<div class="design-stages" role="group" aria-label="디자인 발전 단계 선택">${stages.map(stage => `<button type="button" data-design-stage="${stage.id}" aria-pressed="false">${stage.label}</button>`).join('')}</div><section class="design-stage"><h3 data-stage-title></h3><p data-stage-description></p><div class="comparison-controls" role="group" aria-label="확인할 상황"><strong>확인할 상황</strong>${[['conditions','내 조건'],['pending','미응답'],['conflict','충돌'],['ready','전원 동의'],['changed','조건 변경']].map(([id,label]) => `<button type="button" data-scene="${id}" aria-pressed="${id==='conditions'}">${label}</button>`).join('')}</div><iframe class="stage-preview" loading="lazy"></iframe><p class="stage-hint">버전을 전환하면 선택한 상황의 초기 상태로 시작합니다. 직접 입력한 값은 다른 버전으로 전달되지 않습니다.</p></section>`;
     const frame = host.querySelector('iframe');
     const sendScene = () => frame.contentWindow?.postMessage({ type: 'travel-comparison', scene: currentScene }, location.origin);
     frame.addEventListener('load', sendScene);
@@ -17,7 +17,6 @@ export function mountDemoComparisons(container) {
       host.querySelectorAll('[data-design-stage]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.designStage === id)));
       host.querySelector('[data-stage-title]').textContent = stage.label;
       host.querySelector('[data-stage-description]').textContent = stage.description;
-      host.querySelector('[data-stage-open]').href = stage.url;
       frame.title = stage.title;
       frame.src = stage.url;
     }

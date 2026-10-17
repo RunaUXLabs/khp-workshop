@@ -2,6 +2,7 @@ import { marked } from '../lib/markdown.js';
 import { mountDemoComparisons } from './DemoComparison.js';
 import { Cover } from './Cover.js';
 import { enhanceResourceActions } from './ResourceActions.js';
+import { mountPreviewPanels } from './PreviewPanel.js';
 export function mountLecture(D, DOCS) {
       const secs = D.sections;
       document.title = D.title;
@@ -52,6 +53,7 @@ export function mountLecture(D, DOCS) {
       const prevLabel = document.getElementById('prevLabel');
       const nextLabel = document.getElementById('nextLabel');
       let cur = -1;
+      let cleanupPreviews = () => {};
 
       const detailFab = document.getElementById('detailFab');
       const docPanel = document.getElementById('docPanel');
@@ -110,6 +112,7 @@ export function mountLecture(D, DOCS) {
 
       function escapeHtml(t) { return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
       function goCover() {
+        cleanupPreviews();
         cur = -1;
         closeDoc();
         mainEl.classList.add('is-cover');
@@ -130,12 +133,14 @@ export function mountLecture(D, DOCS) {
         if (i === -1) { goCover(); return; }
         if (i < 0 || i >= secs.length) return;
         cur = i; const s = secs[i];
+        cleanupPreviews();
         mainEl.classList.remove('is-cover');
         prevBtn.hidden = false;
         document.getElementById('brandTitle').removeAttribute('aria-current');
         crumbEl.textContent = s.part;
         contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
         mountDemoComparisons(contentEl);
+        if (['design-comparison', 'figma-mcp'].includes(s.id)) cleanupPreviews = mountPreviewPanels(contentEl);
         enhanceResourceActions(contentEl);
         Object.values(linkMap).forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
         linkMap[i].classList.add('active');
@@ -152,6 +157,7 @@ export function mountLecture(D, DOCS) {
       prevBtn.addEventListener('click', () => go(cur - 1));
       nextBtn.addEventListener('click', () => go(cur + 1));
       document.addEventListener('keydown', e => {
+        if (document.body.classList.contains('preview-open')) return;
         if (['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(e.target.tagName)) return;
         if (docPanel.classList.contains('open')) return;
         if (e.key === 'ArrowLeft') go(cur - 1);
