@@ -22,6 +22,8 @@ export function mountLecture(D, DOCS) {
         },
         renderer(token) { return '<strong>' + this.parser.parseInline(token.tokens) + '</strong>'; }
       }] });
+      // Single tildes denote ranges in the lesson, not strikethrough.
+      marked.use({ tokenizer: { del(src) { if (src.startsWith('~~')) return false; } } });
       marked.setOptions({ breaks: true, gfm: true });
 
       const toc = document.getElementById('toc');
@@ -63,7 +65,7 @@ export function mountLecture(D, DOCS) {
         const doc = DOCS[key]; if (!doc) return;
         const request = ++docRequest;
         docTitleEl.textContent = doc.title || '심화 가이드';
-        docPanel.querySelector('.label').textContent = doc.kind === 'conversation' ? '대화 샘플 · 재구성 예시' : doc.kind === 'background' ? '페르소나 · 합성 배경 자료' : '심화 가이드';
+        docPanel.querySelector('.label').textContent = doc.kind === 'conversation' ? '대화 샘플' : doc.kind === 'background' ? '페르소나 · 합성 배경 자료' : '심화 가이드';
         docBodyEl.scrollTop = 0;
         docPanel.classList.add('open'); docBackdrop.classList.add('open');
         if (docRendered === key) return;
