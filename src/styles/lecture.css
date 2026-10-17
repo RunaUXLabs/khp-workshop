@@ -876,11 +876,7 @@ textarea {
 .preview-viewport.can-pan { cursor: grab; touch-action: none; user-select: none; }
 .preview-viewport.can-pan .preview-media { pointer-events: none; }
 .preview-viewport.is-dragging { cursor: grabbing; }
-.preview-panel.is-expanded { position: fixed; inset: 20px; z-index: 2000; margin: 0; display: flex; flex-direction: column; box-shadow: 0 0 0 100vmax #0b1738bb; }
-.preview-panel.is-expanded .preview-viewport { flex: 1; min-height: 0; height: auto; max-height: none; }
-.preview-open .main { overflow: hidden; }
 @media (max-width: 760px) {
-  .preview-panel.is-expanded { inset: 8px; }
   .preview-toolbar > span { width: 100%; }
   .preview-toolbar button { min-height: 40px; }
 }

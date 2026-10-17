@@ -140,7 +140,7 @@ export function mountLecture(D, DOCS) {
         crumbEl.textContent = s.part;
         contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
         mountDemoComparisons(contentEl);
-        if (['design-comparison', 'figma-mcp'].includes(s.id)) cleanupPreviews = mountPreviewPanels(contentEl);
+        cleanupPreviews = mountPreviewPanels(contentEl);
         enhanceResourceActions(contentEl);
         Object.values(linkMap).forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
         linkMap[i].classList.add('active');
