@@ -1,6 +1,7 @@
 import { marked } from '../lib/markdown.js';
 import { mountDemoComparisons } from './DemoComparison.js';
 import { Cover } from './Cover.js';
+import { enhanceResourceActions } from './ResourceActions.js';
 export function mountLecture(D, DOCS) {
       const secs = D.sections;
       document.title = D.title;
@@ -77,6 +78,7 @@ export function mountLecture(D, DOCS) {
           }
           if (request !== docRequest) return;
           docBodyEl.innerHTML = marked.parse(body);
+          enhanceResourceActions(docBodyEl);
           for (const table of docBodyEl.querySelectorAll('table')) {
             const scroll = document.createElement('div');
             scroll.className = 'guide-table-scroll';
@@ -132,6 +134,7 @@ export function mountLecture(D, DOCS) {
         crumbEl.textContent = s.part;
         contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
         mountDemoComparisons(contentEl);
+        enhanceResourceActions(contentEl);
         Object.values(linkMap).forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
         linkMap[i].classList.add('active');
         linkMap[i].setAttribute('aria-current', 'page');

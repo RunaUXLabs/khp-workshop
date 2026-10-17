@@ -813,6 +813,36 @@ textarea {
   outline-offset: 3px;
 }
 
+.content .resource-action,
+.doc-body .resource-action {
+  display: inline-block;
+  margin: 3px 0;
+  padding: 8px 12px;
+  border: 1px solid #d4ddea;
+  border-radius: 8px;
+  background: #eef1f6;
+  color: var(--navy2);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  box-decoration-break: slice;
+}
+.resource-action-hint {
+  display: inline-block;
+  margin-left: 10px;
+  color: #526078;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.content .resource-action:hover,
+.doc-body .resource-action:hover { background: #dfe7f2; }
+
 .content pre,
 .content pre code,
 .doc-body pre,
