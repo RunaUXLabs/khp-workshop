@@ -21,9 +21,18 @@ export function enhanceResourceActions(root) {
     }
     element.classList.add('resource-action');
     element.dataset.actionKind = kind;
+    // The shared action hint owns the icon; authored labels may already include one.
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      walker.currentNode.textContent = walker.currentNode.textContent.replace(/[↗↓⬇📥🔗]\uFE0F?/gu, '');
+    }
+    const actionAlreadyNamed = kind === 'window' ? /새\s*창/.test(element.textContent)
+      : kind === 'download' ? /내려받|다운로드/.test(element.textContent)
+      : kind === 'panel' ? /패널\s*열기/.test(element.textContent) : false;
     const hint = document.createElement('span');
     hint.className = 'resource-action-hint';
-    hint.textContent = `${icon} ${label}`;
+    hint.textContent = actionAlreadyNamed ? icon : `${icon} ${label}`;
+    if (actionAlreadyNamed) hint.setAttribute('aria-hidden', 'true');
     element.appendChild(hint);
   }
 }
