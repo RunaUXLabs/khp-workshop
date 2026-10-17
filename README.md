@@ -12,6 +12,14 @@
 
 왼쪽 상단 제목은 `src/data/lecture.json`의 `title`, 그 아래 브랜드명은 `subtitle`입니다. `dist`는 빌드 결과이므로 직접 수정하지 않습니다. `preview`와 Pages 배포는 `pnpm run build`를 실행해야 원본 변경이 반영됩니다.
 
+### 표지의 Slido 주소 바꾸기
+
+처음 접속하면 `#cover`에서 Slido 프레젠테이션이 표시됩니다. 왼쪽 상단 로고를 누르면 표지로 돌아오고, ‘수업 시작’으로 기존 첫 강의 항목을 엽니다. 기존 강의 번호와 직접 연결 주소는 유지합니다.
+
+다음 특강에서는 `src/data/lecture.json`의 **`cover.slidoUrl`**을 새 Slido Present 모드 주소로 바꾸세요. 표지 제목은 `cover.title`에서 수정합니다. 로그인·비밀번호·행사 활성 상태는 Slido에서 관리하며, 페이지 안에서 열리지 않는 환경에서는 ‘Slido 새 창에서 보기’를 사용합니다. 배포 사이트에 반영하려면 변경을 커밋하고 `main`에 push합니다.
+
+`wall.sli.do` 주소에 `integration=slido-admin`이 포함돼 있으면 관리자 창을 찾으려 하므로 표시 전에 이 파라미터를 제거합니다. 행사 ID와 `section`은 유지합니다.
+
 Node.js 20.19 이상과 pnpm을 사용합니다. SEED 공식 React·CSS 패키지를 사용하므로 최초 실행·의존성 변경 시 설치가 필요합니다. 전역 npm 설치는 필요하지 않습니다.
 
 ```sh

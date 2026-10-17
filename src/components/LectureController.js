@@ -1,10 +1,16 @@
 import { marked } from '../lib/markdown.js';
 import { mountDemoComparisons } from './DemoComparison.js';
+import { Cover } from './Cover.js';
 export function mountLecture(D, DOCS) {
       const secs = D.sections;
       document.title = D.title;
       document.getElementById('brandTitle').textContent = D.title;
       document.getElementById('brandSub').textContent = D.subtitle;
+      document.getElementById('brandTitle').addEventListener('click', event => {
+        event.preventDefault();
+        goCover();
+        closeMobile();
+      });
       marked.use({ extensions: [{
         name: 'lectureStrong',
         level: 'inline',
@@ -42,7 +48,7 @@ export function mountLecture(D, DOCS) {
       const nextBtn = document.getElementById('nextBtn');
       const prevLabel = document.getElementById('prevLabel');
       const nextLabel = document.getElementById('nextLabel');
-      let cur = 0;
+      let cur = -1;
 
       const detailFab = document.getElementById('detailFab');
       const docPanel = document.getElementById('docPanel');
@@ -99,16 +105,38 @@ export function mountLecture(D, DOCS) {
       document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDoc(); });
 
       function escapeHtml(t) { return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
+      function goCover() {
+        cur = -1;
+        closeDoc();
+        mainEl.classList.add('is-cover');
+        crumbEl.textContent = '';
+        contentEl.innerHTML = Cover(D.cover);
+        Object.values(linkMap).forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
+        document.getElementById('brandTitle').setAttribute('aria-current', 'page');
+        prevBtn.hidden = true;
+        nextBtn.disabled = !secs.length;
+        prevLabel.textContent = '';
+        nextLabel.textContent = secs.length ? '수업 시작 · ' + (secs[0].tocTitle || secs[0].title) : '';
+        mainEl.scrollTop = 0;
+        curDocKey = null;
+        detailFab.classList.remove('show');
+        try { history.replaceState(null, '', '#cover'); } catch (_) { }
+      }
       function go(i) {
+        if (i === -1) { goCover(); return; }
         if (i < 0 || i >= secs.length) return;
         cur = i; const s = secs[i];
+        mainEl.classList.remove('is-cover');
+        prevBtn.hidden = false;
+        document.getElementById('brandTitle').removeAttribute('aria-current');
         crumbEl.textContent = s.part;
         contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
         mountDemoComparisons(contentEl);
-        Object.values(linkMap).forEach(a => a.classList.remove('active'));
+        Object.values(linkMap).forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
         linkMap[i].classList.add('active');
-        prevBtn.disabled = (i === 0); nextBtn.disabled = (i === secs.length - 1);
-        prevLabel.textContent = i > 0 ? secs[i - 1].title : '';
+        linkMap[i].setAttribute('aria-current', 'page');
+        prevBtn.disabled = false; nextBtn.disabled = (i === secs.length - 1);
+        prevLabel.textContent = i > 0 ? secs[i - 1].title : '표지 · 함께 시작하기';
         nextLabel.textContent = i < secs.length - 1 ? secs[i + 1].title : '';
         mainEl.scrollTop = 0;
         curDocKey = (s.detailDoc && DOCS[s.detailDoc]) ? s.detailDoc : null;
@@ -149,10 +177,11 @@ export function mountLecture(D, DOCS) {
 
       window.addEventListener('hashchange', () => {
         const targetId = decodeURIComponent(location.hash.slice(1));
+        if (!targetId || targetId === 'cover') { goCover(); closeMobile(); return; }
         const targetIndex = secs.findIndex(s => s.id === targetId);
         if (targetIndex >= 0) { go(targetIndex); closeMobile(); }
       });
       const hash = decodeURIComponent(location.hash.replace('#', ''));
       const startIdx = secs.findIndex(s => s.id === hash);
-      go(startIdx < 0 ? 0 : startIdx);
+      if (startIdx < 0) goCover(); else go(startIdx);
     }

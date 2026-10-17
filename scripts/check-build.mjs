@@ -8,6 +8,18 @@ const lecture = JSON.parse(await readFile(path.join(dist, 'src/data/lecture.json
 const guides = JSON.parse(await readFile(path.join(dist, 'src/data/guides.json'), 'utf8'));
 const ids = new Set(lecture.sections.map(section => section.id));
 assert.equal(ids.size, lecture.sections.length, 'Section IDs must be unique');
+assert.ok(!ids.has('cover'), 'The cover route is separate from numbered lecture sections');
+const coverUrl = new URL(lecture.cover.slidoUrl);
+assert.equal(coverUrl.protocol, 'https:', 'The Slido presentation must use HTTPS');
+const { Cover } = await import(new URL('../dist/src/components/Cover.js', import.meta.url));
+const adminUrl = new URL(coverUrl);
+adminUrl.searchParams.set('integration', 'slido-admin');
+adminUrl.searchParams.set('utm_source', 'slidoadmin');
+const coverHtml = Cover({ ...lecture.cover, slidoUrl: adminUrl.href });
+assert.ok(!coverHtml.includes('slido-admin'), 'The presentation must not depend on a Slido Host window');
+assert.ok(coverHtml.includes(coverUrl.pathname), 'The cover must retain the selected Slido event');
+if (coverUrl.searchParams.has('section')) assert.ok(coverHtml.includes(coverUrl.searchParams.get('section')), 'The cover must retain the selected Slido section');
+ids.add('cover');
 const checked = new Set();
 async function checkLink(link) {
   if (!link || /^(?:https?:|mailto:|data:)/i.test(link)) return;
