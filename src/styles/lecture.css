@@ -733,7 +733,8 @@ textarea {
     .design-stages button { padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; background: white; color: var(--navy2); cursor: pointer; font-size: 14px; line-height: 1.5; text-align: left; }
     .design-stages button[aria-pressed="true"] { background: var(--navy); color: white; border-color: var(--navy); }
     .design-stages button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-    .stage-preview, .baseline-preview { display: block; width: 100%; max-width: 480px; height: 920px; margin: 24px auto; border: 1px solid var(--border); border-radius: 12px; background: white; }
+    .demo-preview, .stage-preview, .baseline-preview { display: block; width: 100%; max-width: 480px; height: 920px; margin: 24px auto; border: 1px solid var(--border); border-radius: 12px; background: white; }
+    .content .demo-controls { max-width: 480px; }
     .design-stage .stage-hint { font-size: 14px; color: var(--muted); }
     .main-inner:has(.baseline-preview) { max-width: 820px; }
 

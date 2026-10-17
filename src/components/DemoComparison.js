@@ -11,6 +11,7 @@ export function mountDemoComparisons(container) {
 
     host.innerHTML = `<div class="design-stages" role="group" aria-label="디자인 발전 단계 선택">${stages.map(stage => `<button type="button" data-design-stage="${stage.id}" aria-pressed="false">${stage.label}</button>`).join('')}</div><section class="design-stage"><h3 data-stage-title></h3><p data-stage-description></p><aside data-demo-controls></aside><iframe class="stage-preview" loading="lazy"></iframe><p><a data-stage-open target="_blank" rel="noopener noreferrer">선택한 데모 새 창에서 보기 ↗</a></p><p class="stage-hint">버전을 전환하면 선택한 상황의 초기 상태로 시작합니다. 직접 입력한 값은 다른 버전으로 전달되지 않습니다.</p></section>`;
     const frame = host.querySelector('iframe');
+    frame.classList.add('demo-preview');
     let currentStage;
     const controls = mountDemoControls(host.querySelector('[data-demo-controls]'), () => frame.contentWindow, { onChange: updateOpenLink });
     cleanups.push(controls.destroy);
@@ -42,6 +43,7 @@ export function mountDemoComparisons(container) {
   // Intro and Figma examples embed a single demo without the version selector.
   for (const frame of container.querySelectorAll('iframe:not(.stage-preview)')) {
     if (!/^(demo|demo-css|demo-seed)\//.test(frame.getAttribute('src') || '')) continue;
+    frame.classList.add('demo-preview');
     const host = document.createElement('aside');
     frame.before(host);
     const controls = mountDemoControls(host, () => frame.contentWindow);
