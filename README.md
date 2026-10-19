@@ -84,3 +84,9 @@ GitHub Pages 배포 방식 참고: https://docs.github.com/en/pages/getting-star
 - 배포 시 CSS 원본과 Apache-2.0 LICENSE·NOTICE를 `dist/vendor/seed/`에 포함합니다. 당근 로고·서비스 브랜드 자산은 사용하지 않았습니다.
 
 이번에 적용한 규칙과 출처는 [SEED 적용 기록](docs/seed-implementation.md)에 있습니다.
+
+### 대화 시작 안내와 체크 지점 편집
+
+`src/data/lecture.json`의 각 항목에 있는 `practice`에서 시작 문장(`start`), 이어갈 말(`followUp`), 확인 질문(`question`), 막힐 때 안내(`ifUnsure`)를 수정합니다. `mode`가 `conversation`이면 AI에게 할 말, `action`이면 화면에서 먼저 해볼 행동으로 표시합니다. `decision`이 있는 3-1·4-2·5-6은 학생이 선택하는 지점으로 강조합니다.
+
+페이지 번호는 `src/components/PracticeGuide.js`가 카테고리와 목차 순서로 계산합니다. URL과 섹션 ID는 유지됩니다. 자세한 요청 조건은 접힌 상태이며, 선택과 이유는 내려받는 누적 브리프의 표에 기록합니다.

@@ -3,8 +3,10 @@ import { mountDemoComparisons } from './DemoComparison.js';
 import { Cover } from './Cover.js';
 import { enhanceResourceActions } from './ResourceActions.js';
 import { mountPreviewPanels } from './PreviewPanel.js';
+import { sectionNumbers, PracticeEntry, mountPracticeCheck } from './PracticeGuide.js';
 export function mountLecture(D, DOCS) {
       const secs = D.sections;
+      const numbers = sectionNumbers(secs);
       document.title = D.title;
       document.getElementById('brandTitle').textContent = D.title;
       document.getElementById('brandSub').textContent = D.subtitle;
@@ -38,9 +40,9 @@ export function mountLecture(D, DOCS) {
           curGroup = lbl; lastPart = s.part;
         }
         const a = document.createElement('a');
-        a.textContent = s.tocTitle || s.title; a.dataset.idx = i; a.href = '#' + s.id;
+        a.textContent = numbers[i] + ' ' + (s.tocTitle || s.title); a.dataset.idx = i; a.href = '#' + s.id;
         if (s.detailDoc && DOCS[s.detailDoc]) a.classList.add('has-doc');
-        a.dataset.search = ((s.tocTitle || s.title) + ' ' + s.title + ' ' + s.part + ' ' + s.body).toLowerCase();
+        a.dataset.search = (numbers[i] + ' ' + (s.tocTitle || s.title) + ' ' + s.title + ' ' + s.part + ' ' + s.body + ' ' + (s.practice?.start || '')).toLowerCase();
         a.addEventListener('click', event => { event.preventDefault(); go(i); closeMobile(); });
         curGroup.appendChild(a); linkMap[i] = a;
       });
@@ -125,7 +127,7 @@ export function mountLecture(D, DOCS) {
         prevBtn.hidden = true;
         nextBtn.disabled = !secs.length;
         prevLabel.textContent = '';
-        nextLabel.textContent = secs.length ? '수업 시작 · ' + (secs[0].tocTitle || secs[0].title) : '';
+        nextLabel.textContent = secs.length ? '수업 시작 · ' + numbers[0] + ' ' + (secs[0].tocTitle || secs[0].title) : '';
         mainEl.scrollTop = 0;
         curDocKey = null;
         detailFab.classList.remove('show');
@@ -141,7 +143,8 @@ export function mountLecture(D, DOCS) {
         prevBtn.hidden = false;
         document.getElementById('brandTitle').removeAttribute('aria-current');
         crumbEl.textContent = s.part;
-        contentEl.innerHTML = '<h1>' + escapeHtml(s.title) + '</h1>' + marked.parse(s.body.trim());
+        contentEl.innerHTML = '<h1><span class="page-number">' + numbers[i] + '</span> ' + escapeHtml(s.title) + '</h1>' + PracticeEntry(s.practice, numbers[i]) + marked.parse(s.body.trim());
+        mountPracticeCheck(contentEl, s.practice, numbers[i]);
         cleanupComparisons = mountDemoComparisons(contentEl);
         cleanupPreviews = mountPreviewPanels(contentEl);
         enhanceResourceActions(contentEl);
@@ -149,8 +152,8 @@ export function mountLecture(D, DOCS) {
         linkMap[i].classList.add('active');
         linkMap[i].setAttribute('aria-current', 'page');
         prevBtn.disabled = false; nextBtn.disabled = (i === secs.length - 1);
-        prevLabel.textContent = i > 0 ? secs[i - 1].title : '표지 · 함께 시작하기';
-        nextLabel.textContent = i < secs.length - 1 ? secs[i + 1].title : '';
+        prevLabel.textContent = i > 0 ? numbers[i - 1] + ' ' + secs[i - 1].title : '표지 · 함께 시작하기';
+        nextLabel.textContent = i < secs.length - 1 ? numbers[i + 1] + ' ' + secs[i + 1].title : '';
         mainEl.scrollTop = 0;
         curDocKey = (s.detailDoc && DOCS[s.detailDoc]) ? s.detailDoc : null;
         detailFab.classList.toggle('show', !!curDocKey);
