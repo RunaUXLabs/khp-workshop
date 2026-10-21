@@ -3,7 +3,7 @@ import { mountDemoComparisons } from './DemoComparison.js';
 import { Cover } from './Cover.js';
 import { enhanceResourceActions } from './ResourceActions.js';
 import { mountPreviewPanels } from './PreviewPanel.js';
-import { sectionNumbers, PracticeEntry, mountPracticeCheck } from './PracticeGuide.js';
+import { sectionNumbers, PracticeEntry, mountPracticeCheck, mountPracticeContinuations } from './PracticeGuide.js';
 export function mountLecture(D, DOCS) {
       const secs = D.sections;
       const numbers = sectionNumbers(secs);
@@ -42,7 +42,7 @@ export function mountLecture(D, DOCS) {
         const a = document.createElement('a');
         a.textContent = numbers[i] + ' ' + (s.tocTitle || s.title); a.dataset.idx = i; a.href = '#' + s.id;
         if (s.detailDoc && DOCS[s.detailDoc]) a.classList.add('has-doc');
-        a.dataset.search = (numbers[i] + ' ' + (s.tocTitle || s.title) + ' ' + s.title + ' ' + s.part + ' ' + s.body + ' ' + (s.practice?.start || '')).toLowerCase();
+        a.dataset.search = (numbers[i] + ' ' + (s.tocTitle || s.title) + ' ' + s.title + ' ' + s.part + ' ' + s.body + ' ' + (s.practice?.start || '') + ' ' + (s.practice?.steps || []).map(step => step.check + ' ' + step.prompt).join(' ')).toLowerCase();
         a.addEventListener('click', event => { event.preventDefault(); go(i); closeMobile(); });
         curGroup.appendChild(a); linkMap[i] = a;
       });
@@ -145,6 +145,7 @@ export function mountLecture(D, DOCS) {
         crumbEl.textContent = s.part;
         contentEl.innerHTML = '<h1><span class="page-number">' + numbers[i] + '</span> ' + escapeHtml(s.title) + '</h1>' + PracticeEntry(s.practice, numbers[i]) + marked.parse(s.body.trim());
         mountPracticeCheck(contentEl, s.practice, numbers[i]);
+        mountPracticeContinuations(contentEl, s.practice, numbers[i]);
         cleanupComparisons = mountDemoComparisons(contentEl);
         cleanupPreviews = mountPreviewPanels(contentEl);
         enhanceResourceActions(contentEl);
