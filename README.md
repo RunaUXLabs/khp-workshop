@@ -1,92 +1,116 @@
 # AI 서비스 기획 디자인 · KHP 특강
 
-33개 강연 항목, 5개 심화 가이드, 상세 페르소나 배경과 대화 샘플, 세 단계 서비스 UI 비교 및 Mermaid 흐름도를 포함한 GitHub Pages용 정적 프로젝트입니다.
+AI와 대화하며 사용자의 문제를 탐색하고, 서비스 기획을 실제로 조작할 수 있는 UI까지 연결하는 실습형 강의 자료입니다. 웹 교안, 사용자 탐색 예시, 기획 문서 양식, 흐름도와 서비스 데모를 함께 제공합니다.
 
-## 실행
+강의의 중심은 **AI 페르소나와 FGI·IDI를 활용해 처음 생각한 문제를 더 구체적으로 이해하는 것**입니다. 탐색에서 얻은 가설과 선택 이유를 기록하고, 이를 기능·화면·문구·점검 기준으로 이어갑니다.
 
-### 문구·스타일을 수정하며 확인하기
+## 강의 구성
 
-`pnpm dev`를 실행합니다. JSON·CSS·강의 JavaScript는 원본을 직접 읽으므로 저장 후 브라우저를 새로고침하면 반영됩니다. 서비스 개선형 React 코드도 감시해 다시 빌드합니다. 자동 새로고침 기능은 없습니다.
+시작 안내와 7개 주제 영역에 걸쳐 총 33개 항목으로 구성되어 있습니다. 아래 번호는 교안의 주제 구분입니다.
 
-기존 `pnpm run preview`가 실행 중이면 해당 터미널에서 Ctrl+C로 종료한 뒤 `pnpm dev`를 실행하세요. 두 명령은 기본 포트 4173을 함께 사용합니다.
+| 영역 | 주요 내용 | 실습에서 남길 것 |
+| --- | --- | --- |
+| 시작 · 수업과 공통 예시 | AI와 실습하는 방법, 공통 주제, 누적 브리프, Figma 연결, UI 비교 | 실습 주제와 기획 메모 |
+| 01 · 문제 탐색 | 관찰·기억·해석·AI 가설·모르는 정보 구분, 현재와 기대 상태 | 근거표와 최초 문제 정의 |
+| 02 · 사용자와 니즈 | 행동·환경·권한에 따른 페르소나, FGI의 의견 비교, IDI의 사건 탐색 | 가설 페르소나, 대화 기록, 니즈 비교표 |
+| 03 · 서비스 방향과 목표 | 문제 재정의, 현재 대안과 유사 서비스 비교, 목표와 측정 방법 | 선택한 문제와 핵심 가치, 확인 기준 |
+| 04 · 요구사항·기능·흐름 | User Story와 수용 조건, MoSCoW·Kano, 사람과 AI의 역할, 화면·데이터 흐름 | 핵심 기능, 역할표, UI·데이터 흐름도 |
+| 05 · UI 설계와 구현 | AI UX, 화면 설계, 구현 요청, 코드·Figma 실습, 디자인 시스템 | 실행 가능한 UI와 화면 수정 결과 |
+| 06 · 문구와 일관성 | 보이스 톤, 상태별 안내와 버튼 문구, 라이팅 규칙 | UI 문구와 용어·말투 기준 |
+| 07 · 검증과 마무리 | 예외 상황, 핵심 과업 실행, 수정과 재확인, 최종 공유 | 점검표와 최종 기획 문서 |
 
-왼쪽 상단 제목은 `src/data/lecture.json`의 `title`, 그 아래 브랜드명은 `subtitle`입니다. `dist`는 빌드 결과이므로 직접 수정하지 않습니다. `preview`와 Pages 배포는 `pnpm run build`를 실행해야 원본 변경이 반영됩니다.
+## 실습 방법
 
-### 표지의 Slido 주소 바꾸기
+공통 주제인 **‘친구들과 같이 가는 여행’**을 따라가거나, 같은 절차를 자신의 서비스 주제에 적용할 수 있습니다. 공통 예시는 여행 조건을 모으고 후보를 비교한 뒤, 참여자의 동의와 준비자의 최종 확정을 구분하는 서비스입니다.
 
-처음 접속하면 `#cover`에서 Slido 프레젠테이션이 표시됩니다. 왼쪽 상단 로고를 누르면 표지로 돌아오고, ‘수업 시작’으로 기존 첫 강의 항목을 엽니다. 기존 강의 번호와 직접 연결 주소는 유지합니다.
+각 페이지의 시작 안내를 참고해 자신의 AI에게 생각을 자연어로 전달합니다. 응답을 읽고 내 상황과 다른 부분을 고치거나 빠진 정보를 보태며 진행합니다. 본문 중간의 후속 대화 안내에는 확인할 점과 이어서 할 말이 담겨 있습니다. 자세한 요청 조건과 긴 예시는 필요할 때 펼쳐볼 수 있습니다.
 
-다음 특강에서는 `src/data/lecture.json`의 **`cover.slidoUrl`**을 출력용 Slido Present 모드 주소로, **`cover.slidoParticipationUrl`**을 학생용 참여 주소로 각각 바꾸세요. 표지 제목은 `cover.title`에서 수정합니다. 로그인·비밀번호·행사 활성 상태는 Slido에서 관리합니다. ‘slido 새 창에서 참여하기’는 학생용 참여 화면을 엽니다. 배포 사이트에 반영하려면 변경을 커밋하고 `main`에 push합니다.
+다음 세 지점에서는 AI의 추천을 살펴본 뒤 수강생이 직접 선택합니다.
 
-`wall.sli.do` 주소에 `integration=slido-admin`이 포함돼 있으면 관리자 창을 찾으려 하므로 표시 전에 이 파라미터를 제거합니다. 행사 ID와 `section`은 유지합니다.
+- **3-1 문제 선택:** 누구의 어떤 문제에 집중할지 정합니다.
+- **4-2 핵심 기능 선택:** 이번에 만들 기능과 제외할 범위를 정합니다.
+- **5-6 화면 수정 선택:** 어느 화면의 무엇을 왜 고칠지 정합니다.
 
-Node.js 20.19 이상과 pnpm을 사용합니다. SEED 공식 React·CSS 패키지를 사용하므로 최초 실행·의존성 변경 시 설치가 필요합니다. 전역 npm 설치는 필요하지 않습니다.
+선택한 내용과 이유는 하나의 누적 브리프에 이어서 기록합니다. 마지막에는 문제·기능·화면의 연결, 직접 확인한 결과와 남은 질문을 정리해 공유합니다.
+
+AI 페르소나와 인터뷰 대화는 실제 사용자 조사 전에 질문과 가설을 탐색하기 위한 **합성자료**입니다. AI가 만든 발언·해석과 실제로 관찰하거나 실행한 결과를 구분하고, 실제 사용자에게 확인할 질문을 남깁니다.
+
+## 포함된 자료
+
+- **웹 교안:** 목차 검색, 페이지별 실습 안내, 후속 대화와 확인 질문
+- **심화 가이드 5개:** 문제 탐색, 페르소나, IDI, FGI, 문제 재정의
+- **페르소나 배경과 대화 샘플:** 공통 주제의 네 인물과 페르소나·FGI·IDI 대화 예시
+- **누적 브리프 템플릿:** 근거·선택·실행 결과를 정리하는 Markdown 양식
+- **Mermaid 자료:** UI 흐름도와 데이터 흐름도의 요청문, 원본 코드, SVG와 보기 페이지
+- **서비스 데모 3종:** 최초형, CSS 일부 적용형, SEED React 모바일 흐름
+- **Figma 참고 자료:** 교안 내 디자인 링크와 화면 이미지
+
+## 서비스 데모
+
+같은 서비스의 화면과 과업 진행 방식을 세 가지 형태로 비교할 수 있습니다.
+
+| 경로 | 내용 |
+| --- | --- |
+| `/demo/` | 조건 확인·후보 비교를 수행하는 최초형 UI |
+| `/demo-css/` | 최초형에 SEED CSS 토큰을 일부 적용한 UI |
+| `/demo-seed/` | SEED React 컴포넌트로 구성한 모바일 UI |
+
+모바일 데모는 시작 → 날짜 → 예산 → 필수 조건 → 공유 범위 → 내 조건 확인 → 후보 선택 → 참여자별 동의 → 확정 완료 순서로 진행합니다. 데모의 실습 조작부에서 참여자와 상황을 바꾸며 미응답·조건 충돌·동의 후 변경을 살펴볼 수 있습니다.
+
+데모는 샘플 데이터로 작동하는 브라우저 시제품입니다. 실제 AI 호출, 계정, 서버 저장, 외부 공유, 예약·결제는 포함하지 않습니다. 데이터는 새로고침하면 초기화됩니다.
+
+## 로컬 실행
+
+Node.js 20.19 이상과 pnpm 11.25.0을 사용합니다. 저장소 루트에서 의존성을 설치한 뒤 개발 서버를 실행합니다.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm run build
-pnpm run check
-pnpm run preview
+pnpm dev
 ```
 
-http://127.0.0.1:4173 에서 강연, /demo/ 에서 최초형, /demo-css/ 에서 CSS 일부 적용형, /demo-seed/ 에서 공식 SEED React 개선형을 봅니다. ES 모듈·JSON을 불러오므로 파일 더블클릭 대신 HTTP 서버로 실행하세요.
+[로컬 교안 열기](http://127.0.0.1:4173)
 
-## 파일 구성
+개발 서버는 교안의 JSON·CSS·JavaScript 원본을 읽으며, React 데모는 변경 시 다시 빌드합니다. 수정 내용을 보려면 브라우저를 새로고침하세요. ES 모듈과 JSON을 불러오므로 HTML 파일을 직접 여는 대신 서버를 사용합니다.
 
-- `index.html`: 앱 진입용 HTML 셸
-- `src/components/`: Sidebar, LectureContent, GuidePanel, LectureController, DiagramViewer
-- `src/data/`: 강연 콘텐츠와 심화 가이드 JSON
-- `src/demo/`: 조건 확인·후보 비교 컴포넌트와 상태 모델
-- `src/demo-seed/`: 공식 SEED React 컴포넌트로 구성한 모바일 9단계 흐름
-- `src/demo-seed/seed-design/ui/`: 공식 CLI로 설치한 SEED 스니펫
-- `src/components/DemoComparison.js`: 최초형 → CSS 일부 적용 → 공식 컴포넌트·모바일 흐름의 3단계 전환 뷰
-- `src/styles/`: 강연·서비스·도식 스타일
-- `public/`: 로컬 Markdown 파서, SVG·Mermaid 코드, 다운로드 양식
-- `scripts/`: 정적 빌드·로컬 미리보기
-- `.github/workflows/pages.yml`: GitHub Pages 배포
+배포용 결과물을 확인하려면 다음 명령을 실행합니다.
 
-콘텐츠는 `src/data/lecture.json`, 심화 자료는 `src/data/guides.json`에서 수정합니다. `title`은 본문 제목, 선택 항목 `tocTitle`은 사이드바 전용 제목입니다. 상세 배경과 대화 샘플 원문은 `public/examples/*.md`에서 수정하며 가이드의 `source`가 이 파일을 가리킵니다. `LECTURE.md`는 참고용 자료이며 웹페이지의 원본은 JSON입니다. 스타일과 동작은 HTML 본문에 합치지 않습니다.
+```sh
+pnpm build
+pnpm check
+pnpm preview
+```
 
-## GitHub Pages 배포
+`check`는 빌드 결과의 자료·링크·자산 경로를 검사합니다. `preview`는 `dist/`를 제공하므로 원본을 수정한 뒤에는 다시 빌드해야 합니다. 개발 서버와 미리보기 서버는 기본 포트 4173을 함께 사용하므로 하나씩 실행합니다.
 
-이 프로젝트 폴더의 내용만 새 저장소의 루트에 올립니다. 상위 폴더의 원본 강의·백업·개인 파일을 함께 올리지 마세요. GitHub 저장소 Settings → Pages → Source에서 **GitHub Actions**를 선택하고 main 브랜치에 push하면 workflow가 dist를 배포합니다. 저장소 이름 아래의 경로에서도 동작하도록 자산은 상대 경로를 사용합니다.
+## 저장소 구조
 
-배포 대상 저장소는 `RunaUXLabs/khp-workshop`입니다. Pages의 Source는 **GitHub Actions**로 설정합니다. `main`에 push하면 Node.js 24·pnpm 11.25.0으로 잠금파일 설치 → 빌드 → `pnpm run check` → 아티팩트 업로드 → Pages 배포를 진행합니다. Actions 화면에서 성공 여부와 실제 배포 주소를 확인할 수 있습니다. `dist/`와 `node_modules/`는 커밋하지 않습니다.
+| 경로 | 내용 |
+| --- | --- |
+| `index.html` | 웹 교안 진입 페이지 |
+| `src/data/lecture.json` | 강의 본문, 목차, 실습 안내, 표지 설정 |
+| `src/data/guides.json` | 심화 가이드와 배경·대화 자료 연결 |
+| `src/components/` | 목차, 교안, 실습 안내, 자료 패널, 데모 비교 UI |
+| `src/styles/` | 교안·데모·흐름도 스타일 |
+| `src/demo/` | 최초형 데모와 공통 상태 모델 |
+| `src/demo-seed/` | SEED React 모바일 데모와 UI 컴포넌트 |
+| `public/examples/` | 페르소나 배경과 대화 샘플 Markdown |
+| `public/diagrams/` | 흐름도 SVG, Mermaid 원본과 보기 페이지 |
+| `public/images/` | 교안에서 사용하는 화면 이미지 |
+| `public/` | 다운로드 양식, 데모 진입 페이지, 로컬 라이브러리 |
+| `skills/seed-design/` | SEED Design 관련 스킬과 참고 규칙 |
+| `docs/` | SEED 구현 참고 문서 |
+| `scripts/` | 개발 서버, 빌드와 배포 자산 검사 |
+| `.github/workflows/pages.yml` | GitHub Pages 배포 워크플로 |
+| `LECTURE.md` | 강의 참고 문서 |
 
-예상 사이트 주소: https://runauxlabs.github.io/khp-workshop/ (최초 배포 성공 후 이용 가능)
+웹 교안의 콘텐츠 원본은 `src/data/lecture.json`입니다. 심화 가이드는 `src/data/guides.json`, 별도 배경·대화 원문은 `public/examples/`에서 관리합니다. `dist/`는 빌드 결과물입니다.
 
-## 서비스 데모 범위
+표지의 수업 제목과 Slido 주소는 `lecture.json`의 `cover.title`, `cover.slidoUrl`, `cover.slidoParticipationUrl`에서 설정합니다.
 
-수업용 합성자료로 작동하는 브라우저 시제품입니다. 실제 AI 호출·계정·서버 저장·외부 공유·예약·결제는 없습니다. 미응답 차단, 조건 충돌, 개인 동의, 지수의 최종 확정, 조건 변경 후 동의·확정 해제를 직접 조작할 수 있습니다. 데이터는 새로고침하면 초기화됩니다. 비공개 사유는 수집하지 않습니다.
+## 배포와 사용 기술
 
-Figma 결과: https://www.figma.com/design/2LiYcXpP3w0eX7yjnXouzU/?node-id=4-130
+교안은 HTML·CSS·JavaScript ES 모듈과 Markdown 콘텐츠로 구성된 정적 사이트입니다. 모바일 데모는 React와 SEED Design을 사용하며 esbuild로 번들링합니다.
 
-편집 가능한 텍스트 103개, 프레임 23개, 라이브러리 버튼 인스턴스 7개로 구성했습니다. 화면 전체를 이미지로 붙인 구조가 아닙니다. `public/images/figma-service-overview.png`는 강연에서 보여주는 결과 참고 이미지입니다.
+GitHub Pages의 배포 소스를 **GitHub Actions**로 설정하면, 저장소의 워크플로가 `main` 브랜치의 변경을 빌드·검사한 뒤 `dist/`를 배포합니다. `dist/`와 `node_modules/`는 Git에 포함하지 않습니다.
 
-GitHub Pages 배포 방식 참고: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
-
-`public/vendor/marked.min.js`는 Marked 12.0.2 (MIT)입니다. 같은 폴더의 LICENSE를 확인하세요. 강의 글꼴은 CDN으로 불러오는 Pretendard Variable 웹폰트입니다. 본문은 16px, 보조 설명은 최소 14px입니다. 서비스 개선형은 Noto Sans KR·시스템 글꼴을 사용합니다.
-
-## SEED 개선형과 비교
-
-첫 강의 항목에서는 최초형만 보여줍니다. 시작 카테고리의 여섯 번째 항목 `#design-comparison`과 Figma 실습 항목에서는 세 버전을 전환하며 비교합니다. 단계 전환 시 선택한 상황으로 초기화되며, 입력값은 다른 버전으로 전달하지 않습니다. 서비스 기능·스타일은 유지하고, 상황 선택과 참여자 전환은 세 버전 공통으로 서비스 바깥의 ‘실습 조작’에 모았습니다. 새 창에도 같은 조작부가 표시됩니다.
-
-- 공식 패키지: `@seed-design/css@3.0.2`, pnpm-lock.yaml로 고정
-- CSS 일부 적용형: 최초형의 네이티브 UI·동작을 유지하고 공개 SEED CSS 토큰을 일부 적용한 학습용 중간 예시입니다.
-- 공식 컴포넌트 개선형: `@seed-design/react@3.0.0`, 공식 CLI의 ActionButton·TextField·RadioSelectBox·Badge·Callout·List·ListHeader·ResultSection 및 Divider·Icon·Box·VStack·HStack·Text를 사용합니다.
-- 흐름: 시작 → 날짜 → 예산 → 필수 조건 → 공유 범위 → 내 조건 확인 → 후보 선택 → 참여자별 동의 → 확정 완료. 이전 이동 시 입력을 유지합니다.
-- 교안·최초형은 바닐라 ES 모듈이며 개선형만 React/esbuild로 별도 빌드합니다. CSS·JS·콘텐츠는 별도 파일로 배포합니다.
-- 도메인 모델: `src/demo/model.js`를 두 버전이 공유합니다.
-- 이전 Figma CSS 매핑 시안: https://www.figma.com/design/2LiYcXpP3w0eX7yjnXouzU/?node-id=12-79 (현재 React 모바일 흐름과 다릅니다.)
-- Figma 공식 SEED 라이브러리 인스턴스는 연결되지 않았습니다. CSS 설치본과 일치하는 로컬 변수 26개, 텍스트 스타일 12개, 버튼·배지 로컬 컴포넌트로 구성했습니다.
-- 코드 기반 Figma UI 13개 화면: https://www.figma.com/design/2LiYcXpP3w0eX7yjnXouzU/?node-id=19-28 . 이전 작업 옆에 편집 가능한 텍스트·오토 레이아웃으로 재현했습니다. 공식 published 컴포넌트 인스턴스를 뜻하지 않습니다.
-- `skills/seed-design/`에는 사용자가 지정한 공식 스킬과 관련 규칙을 프로젝트 안에 보관했습니다. 사용자 전역 스킬·npm은 설치하지 않았습니다.
-- 배포 시 CSS 원본과 Apache-2.0 LICENSE·NOTICE를 `dist/vendor/seed/`에 포함합니다. 당근 로고·서비스 브랜드 자산은 사용하지 않았습니다.
-
-이번에 적용한 규칙과 출처는 [SEED 적용 기록](docs/seed-implementation.md)에 있습니다.
-
-### 대화 시작 안내와 체크 지점 편집
-
-`src/data/lecture.json`의 각 항목에 있는 `practice`에서 시작 문장(`start`), 이어갈 말(`followUp`), 확인 질문(`question`), 막힐 때 안내(`ifUnsure`)를 수정합니다. `mode`가 `conversation`이면 AI에게 할 말, `action`이면 화면에서 먼저 해볼 행동으로 표시합니다. `decision`이 있는 3-1·4-2·5-6은 학생이 선택하는 지점으로 강조합니다.
-
-페이지 번호는 `src/components/PracticeGuide.js`가 카테고리와 목차 순서로 계산합니다. URL과 섹션 ID는 유지됩니다. 자세한 요청 조건은 접힌 상태이며, 선택과 이유는 내려받는 누적 브리프의 표에 기록합니다.
+외부 라이브러리의 라이선스는 각 패키지와 `public/vendor/LICENSE.md`를 참고하세요. 빌드 결과에는 SEED CSS의 `LICENSE`와 `NOTICE`가 포함됩니다.
